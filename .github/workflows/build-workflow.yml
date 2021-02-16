@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Python CI
 
 # Controls when the action will run. 
 on:
@@ -23,10 +23,15 @@ jobs:
       - name: Run a one-line script
         run: echo Hello, world!
 
-      # Runs a set of commands using the runners shell
-      - name: Build all python projects
+      - name: Bazel help
 
         uses: ngalaiko/bazel-action@2.0.0
         with:
           # Arguments to the bazel command
           args: help
+
+      - name: Bazel build
+
+        uses: ngalaiko/bazel-action@2.0.0
+        with:
+          args: build "//my_bash_runner:bash_runner"
