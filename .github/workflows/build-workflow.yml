@@ -30,8 +30,14 @@ jobs:
           # Arguments to the bazel command
           args: help
 
-      - name: Bazel build
+      - name: Bazel sync
 
         uses: ngalaiko/bazel-action@2.0.0
         with:
-          args: build "//my_bash_runner:bash_runner"
+          args: sync
+      
+      - name: Bazel test
+
+        uses: ngalaiko/bazel-action@2.0.0
+        with:
+          args: test
