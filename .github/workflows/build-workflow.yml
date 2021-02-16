@@ -29,4 +29,4 @@ jobs:
         uses: ngalaiko/bazel-action@2.0.0
         with:
           # Arguments to the bazel command
-          args: build //my_bash_runner:bash_runner
+          args: help
