@@ -1,27 +1,30 @@
 import io
 from typing import List
 
-from src.commands.basic_commands import EchoCommand, CatCommand
-from src.commands.pipe import PipeAggregation
-from src.commands.icommand import Command
+from src.commands.basic_commands import *
+from src.commands.builtin_commands import *
+from src.commands.command_api import ICommand
+from src.enviroment.enviroment import Environment
 from testing.common import *
 
-def check(cmd: Command, args: List[str], inp: str, expected: str):
+
+def check(cmd: ICommand, args: List[str], inp: str, expected: str):
     inp_stream = io.StringIO(inp)
     output_stream = io.StringIO()
     err_stream = io.StringIO()
-    cmd.run(args, inp_stream, output_stream, err_stream)
+    env = Environment()
+    cmd.run(args, inp_stream, output_stream, err_stream, env)
     assert output_stream.getvalue() == expected
 
 
 def test_1():
     echo = EchoCommand()
-    check(echo, ['123', '456'], '', '123 456')
+    check(echo, ['123', '456'], '', '123 456\n')
 
 
 def test_2():
     echo = EchoCommand()
-    check(echo, [], '', '')
+    check(echo, [], '', '\n')
 
 
 def test_3():
@@ -35,8 +38,8 @@ def test_3():
 def test_4():
     echo = EchoCommand()
     cat = CatCommand()
-    pipe = PipeAggregation(echo, ['hello'], cat, [])
+    pipe = PipeAggregationCommand(echo, ['hello'], cat, [])
 
-    check(pipe, [], '', 'hello')
+    check(pipe, [], '', 'hello\n')
 
 

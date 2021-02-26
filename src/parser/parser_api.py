@@ -7,7 +7,7 @@ from typing import TypeVar, Generic
 T = TypeVar('T')
 
 
-class UtilityInfo(Generic[T]):
+class CommandInfo(Generic[T]):
     def __init__(self, name: T, args: List[T]):
         self._name = name
         self._args = args
@@ -25,11 +25,11 @@ class UtilityInfo(Generic[T]):
 
 
 class PipeInfo(Generic[T]):
-    def __init__(self, utils: List[UtilityInfo[T]]):
+    def __init__(self, utils: List[CommandInfo[T]]):
         self._utils = utils
 
     @property
-    def utils(self) -> List[UtilityInfo[T]]:
+    def utils(self) -> List[CommandInfo[T]]:
         return self._utils
 
     def __str__(self):

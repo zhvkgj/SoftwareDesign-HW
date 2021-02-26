@@ -1,6 +1,8 @@
 from enum import Enum
 import ply.lex as lex
 
+from src.exeptions.exeptions import ParseError
+
 
 class TokenType(Enum):
     STR = 'STR'
@@ -44,22 +46,22 @@ def tokenize(t: lex.LexToken, tp: TokenType):
 
 
 def t_VAR_DEF(t):
-    r'\w+\=\w+'
+    r'\w+=([^\s\t\r\'\"\|=]+|\'[^\']*\'|\"[^\"]*\")'
     return tokenize(t, TokenType.VAR_DEF)
 
 
 def t_STR(t):
-    r'\w+'
+    r'[^\s\t\r\'\"\|=]+'
     return tokenize(t, TokenType.STR)
 
 
 def t_SINGLE(t):
-    r'\'(\s|\w)*\''
+    r'\'[^\']*\''
     return tokenize(t, TokenType.SINGLE)
 
 
 def t_DOUBLE(t):
-    r'\"(\s|\w)*\"'
+    r'\"[^\"]*\"'
     return tokenize(t, TokenType.DOUBLE)
 
 
@@ -68,11 +70,10 @@ def t_PIPE(t):
     return tokenize(t, TokenType.PIPE)
 
 
-t_ignore = ' \t'
+t_ignore = ' \t\n'
 
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
+    raise ParseError(f'Illegal token near \'{t.value.strip()}\'')
 
 lexer = lex.lex()

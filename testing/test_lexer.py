@@ -1,7 +1,5 @@
 from typing import List
 
-import pytest
-
 from src.lexer.lexer import Lexer
 from src.lexer.rules import Token, TokenType
 

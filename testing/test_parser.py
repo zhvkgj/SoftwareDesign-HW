@@ -1,4 +1,4 @@
-from src.parser.SimpleParser import *
+from src.parser.simple_parser import *
 # from src.parser.IParser import *
 
 
@@ -11,7 +11,7 @@ def check(s: str, expected: PipeInfo):
 def test_1():
     cmd = """echo 5"""
     expected = PipeInfo([
-        UtilityInfo(Token(TokenType.STR, 'echo'), [Token(TokenType.STR, '5')])
+        CommandInfo(Token(TokenType.STR, 'echo'), [Token(TokenType.STR, '5')])
     ])
     check(cmd, expected)
 
@@ -19,7 +19,7 @@ def test_1():
 def test_2():
     cmd = """x=5"""
     expected = PipeInfo([
-        UtilityInfo(Token(TokenType.STR, 'SetVar'),
+        CommandInfo(Token(TokenType.STR, 'SetVar'),
                     [
                         Token(TokenType.STR, 'x'),
                         Token(TokenType.STR, '5')
@@ -31,8 +31,8 @@ def test_2():
 def test_3():
     cmd = """ echo 'x' | cat """
     expected = PipeInfo([
-        UtilityInfo(Token(TokenType.STR, 'echo'),
+        CommandInfo(Token(TokenType.STR, 'echo'),
                     [Token(TokenType.SINGLE, "'x'")]),
-        UtilityInfo(Token(TokenType.STR, 'cat'), [])
+        CommandInfo(Token(TokenType.STR, 'cat'), [])
     ])
     check(cmd, expected)

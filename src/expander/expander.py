@@ -2,7 +2,7 @@ import re
 from typing import Dict, Match
 
 from src.lexer.rules import *
-from src.parser.IParser import *
+from src.parser.parser_api import *
 
 
 class Expander:
@@ -27,9 +27,9 @@ class Expander:
         raise RuntimeError(f'Unsupported token kind: {t.kind}')
 
     @staticmethod
-    def substitute_utility(cmd_info: UtilityInfo[Token], mapper: Dict[str, str]) -> UtilityInfo[str]:
+    def substitute_utility(cmd_info: CommandInfo[Token], mapper: Dict[str, str]) -> CommandInfo[str]:
         # TODO: mapper
-        return UtilityInfo(
+        return CommandInfo(
             Expander.substitute(cmd_info.name, mapper),
             [Expander.substitute(x, mapper) for x in cmd_info.args]
         )
