@@ -5,7 +5,7 @@ from src.commands.builtin_commands import *
 from src.commands.command_api import ICommand
 from src.enviroment.enviroment import Environment
 from src.expander.expander import Expander
-from src.exeptions.exeptions import CommandNotRegistered
+from src.exceptions.exceptions import CommandNotRegistered
 from src.lexer.lexer import Lexer
 from src.parser.parser_api import CommandInfo
 from src.parser.simple_parser import SimpleParser

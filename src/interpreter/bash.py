@@ -1,3 +1,5 @@
+from typing import IO
+
 from src.commands.basic_commands import *
 from src.interpreter.base_interpreter import BaseInterpreter
 
@@ -7,7 +9,8 @@ class BashInterpreter(BaseInterpreter):
         EchoCommand,
         CatCommand,
         PwdCommand,
-        WcCommand
+        WcCommand,
+        GrepCommand
     ]
 
     def __init__(self, inp: IO, out: IO, err: IO):

@@ -1,6 +1,6 @@
 from typing import IO
 from src.interpreter.bash import BashInterpreter
-from src.exeptions.exeptions import InterpreterException
+from src.exceptions.exceptions import InterpreterException
 
 
 def bash(inp: IO, out: IO, err: IO):

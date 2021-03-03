@@ -1,7 +1,7 @@
 from enum import Enum
 import ply.lex as lex
 
-from src.exeptions.exeptions import ParseError
+from src.exceptions.exceptions import ParseError
 
 
 class TokenType(Enum):
