@@ -1,10 +1,15 @@
+"""
+Модуль с реализацией кастомных утилит.
+"""
+
 import argparse
 import os
+import re
 from typing import Match, Optional
 
 from termcolor import colored
+
 from src.commands.command_api import IBasicCommand
-import re
 
 
 class BasicCmdNames:
@@ -124,13 +129,10 @@ class GrepCommand(IBasicCommand):
         namespace = parser.parse_args(args)
 
         window = namespace.A
-        pattern = namespace.pattern
-        ignore_case = namespace.i
-        whole_word = namespace.w
 
         last = -1
         for i, line in enumerate(inp):
-            s = GrepCommand._grep_line(line, pattern, ignore_case, whole_word)
+            s = GrepCommand._grep_line(line, namespace.pattern, namespace.i, namespace.w)
             if s:
                 if last != -1 and window > 0 and i > last:
                     print(colored('--', 'blue'), file=out)

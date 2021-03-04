@@ -1,5 +1,5 @@
+from src.lexer.lexer import Lexer
 from src.parser.simple_parser import *
-# from src.parser.IParser import *
 
 
 def check(s: str, expected: PipeInfo):

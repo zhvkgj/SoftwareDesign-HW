@@ -1,12 +1,15 @@
+"""
+Модуль с встроенными командами, которые содержаться
+в интерпретаторе по дефолту.
+"""
+
 import io
-import sys
+import subprocess
 from typing import List
 
 from src.commands.command_api import IBasicCommand
 from src.commands.command_api import ICommand
-from src.enviroment.enviroment import Environment
 from src.exceptions.exceptions import ExitInterpreter
-import subprocess
 
 
 class BuiltInCmdNames:

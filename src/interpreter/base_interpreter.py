@@ -1,9 +1,14 @@
-from functools import reduce
-from typing import Dict, IO
+"""
+Модуль с реализацией базого интерпретатора.
+"""
 
-from src.commands.basic_commands import IBasicCommand
-from src.commands.builtin_commands import *
-from src.commands.command_api import ICommand
+from functools import reduce
+from typing import Dict, IO, List
+
+from src.commands.builtin_commands import SetVarCommand, ListVarsCommand
+from src.commands.builtin_commands import ExitCommand, ExternalCommand
+from src.commands.builtin_commands import PipeAggregationCommand
+from src.commands.command_api import ICommand, IBasicCommand
 from src.enviroment.enviroment import Environment
 from src.expander.expander import Expander
 from src.lexer.lexer import Lexer
@@ -12,6 +17,11 @@ from src.parser.simple_parser import SimpleParser
 
 
 class BaseInterpreter:
+    """
+    Базовый интерпретатор. Реализует основной движок
+    запуска команд. Предоставляет дефолтные команды
+    и механизм регистрации новых команд.
+    """
     _registered_cmds = [
         SetVarCommand,
         ListVarsCommand,
@@ -19,6 +29,13 @@ class BaseInterpreter:
     ]
 
     def __init__(self, inp: IO, out: IO, err: IO):
+        """
+        Конструктор, который фиксирует потоки, с которыми
+        будет работать интерпретатор (не обязательно sys.stdin/...)
+        :param inp: Поток ввода (например, StringIO)
+        :param out: Поток вывода
+        :param err: Поток ошибок
+        """
         self.inp = inp
         self.out = out
         self.err = err
@@ -39,14 +56,21 @@ class BaseInterpreter:
     def _get_cmd(self, name: str) -> ICommand:
         if name in self._cmds:
             return self._cmds[name]
-        else:
-            return ExternalCommand(name)
+        return ExternalCommand(name)
 
     def _make_pipe(self, acc: PipeAggregationCommand, cmd_info: CommandInfo[str]):
         cmd = self._get_cmd(cmd_info.name)
         return PipeAggregationCommand(acc, [], cmd, cmd_info.args)
 
     def execute_cmd_line(self, cmd_line: str) -> int:
+        """
+        Основной метод, который выполняет одну командную
+        строку. Работает примерно в таком порядке:
+        Лексер -> Парсер -> Подстановка переменных ->
+        Поиск команд -> Собирание пайплайнов -> Запуск
+        :param cmd_line:
+        :return:
+        """
         tokens = Lexer.split(cmd_line)
         pipe_token_info = SimpleParser.parse(tokens)
         pipe_str_info = Expander.substitute_pipe(pipe_token_info, self._env.vars)
@@ -61,7 +85,8 @@ class BaseInterpreter:
                   )
             cmd = reduce(self._make_pipe, cmd_infos[2:], ini)
             return self._run_cmd(cmd, [])
-        elif len(cmd_infos) == 1:
+        if len(cmd_infos) == 1:
             cmd_info = cmd_infos[0]
             cmd = self._get_cmd(cmd_info.name)
             return self._run_cmd(cmd, cmd_info.args)
+        return 0

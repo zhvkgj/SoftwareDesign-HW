@@ -1,3 +1,8 @@
+"""
+Модуль, где задаются регулярки для токенов.
+Используется библиотека Lex.
+"""
+
 from enum import Enum
 import ply.lex as lex
 
@@ -5,6 +10,13 @@ from src.exceptions.exceptions import ParseError
 
 
 class TokenType(Enum):
+    """
+    Класс перечисления токенов.
+    STR: обычная строка
+    SINGLE: строка в одинарных кавычках
+    DOUBLE: строка в двойных кавычках
+    VAR_DER: обяъвление переменной вида var=expr.
+    """
     STR = 'STR'
     SINGLE = 'SINGLE'
     DOUBLE = 'DOUBLE'
@@ -13,6 +25,12 @@ class TokenType(Enum):
 
 
 class Token:
+    """
+    Класс, представляющий токен. У токена есть тип
+    и подлежащая строка. От типа зависит, будет ли
+    как будет происходить дальнейшая подстановка
+    переменных.
+    """
     def __init__(self, kind: TokenType, token: str):
         self._kind = kind
         self._token = token
