@@ -81,12 +81,15 @@ class WcCommand(IBasicCommand):
 
 
 class GrepCommand(IBasicCommand):
+    def __init__(self):
+        self._parser = GrepCommand._get_args_parser()
+
     @staticmethod
     def get_name() -> str:
         return BasicCmdNames.Grep
 
     @staticmethod
-    def get_args_parser():
+    def _get_args_parser():
         parser = argparse.ArgumentParser()
         parser.add_argument('-i', required=False, action='store_true')
         parser.add_argument('-w', required=False, action='store_true')
@@ -116,7 +119,8 @@ class GrepCommand(IBasicCommand):
         return re.sub(pattern, replace, s, **params)
 
     def run(self, args, inp, out, err, env) -> int:
-        parser = GrepCommand.get_args_parser()
+        parser = self._parser
+
         namespace = parser.parse_args(args)
 
         window = namespace.A
@@ -136,6 +140,3 @@ class GrepCommand(IBasicCommand):
             if i <= last:
                 print(s, file=out, end='')
         return 0
-
-
-# print(GrepCommand._grep_line('I can color it', 'color', whole_word=False, ignore_case=True))

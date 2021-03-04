@@ -1,15 +1,14 @@
 from functools import reduce
 from typing import Dict, IO
 
+from src.commands.basic_commands import IBasicCommand
 from src.commands.builtin_commands import *
 from src.commands.command_api import ICommand
 from src.enviroment.enviroment import Environment
 from src.expander.expander import Expander
-from src.exceptions.exceptions import CommandNotRegistered
 from src.lexer.lexer import Lexer
 from src.parser.parser_api import CommandInfo
 from src.parser.simple_parser import SimpleParser
-from src.commands.basic_commands import IBasicCommand
 
 
 class BaseInterpreter:
@@ -37,10 +36,11 @@ class BaseInterpreter:
     def _run_cmd(self, cmd: ICommand, args: List[str]) -> int:
         return cmd.run(args, self.inp, self.out, self.err, self._env)
 
-    def _get_cmd(self, name: str) -> IBasicCommand:
-        if name not in self._cmds:
-            raise CommandNotRegistered(f'Command {name} not registered')
-        return self._cmds[name]
+    def _get_cmd(self, name: str) -> ICommand:
+        if name in self._cmds:
+            return self._cmds[name]
+        else:
+            return ExternalCommand(name)
 
     def _make_pipe(self, acc: PipeAggregationCommand, cmd_info: CommandInfo[str]):
         cmd = self._get_cmd(cmd_info.name)

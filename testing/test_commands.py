@@ -17,17 +17,17 @@ def check(cmd: ICommand, args: List[str], inp: str, expected: str):
     assert output_stream.getvalue() == expected
 
 
-def test_1():
+def test_echo1():
     echo = EchoCommand()
     check(echo, ['123', '456'], '', '123 456\n')
 
 
-def test_2():
+def test_echo2():
     echo = EchoCommand()
     check(echo, [], '', '\n')
 
 
-def test_3():
+def test_cat3():
     path = test_input / 'file_1.txt'
     cat = CatCommand()
     with open(path, 'r') as f:
@@ -35,7 +35,7 @@ def test_3():
     check(cat, [str(path)], '', expected)
 
 
-def test_4():
+def test_echo_pipe_cat():
     echo = EchoCommand()
     cat = CatCommand()
     pipe = PipeAggregationCommand(echo, ['hello'], cat, [])

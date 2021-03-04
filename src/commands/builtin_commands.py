@@ -69,24 +69,25 @@ class PipeAggregationCommand(ICommand):
 
 
 class ExternalCommand(ICommand):
+    def __init__(self, name):
+        self._name = name
+
     def run(self, args, inp, out, err, env) -> int:
-        proc = subprocess.Popen(args,
-                                stdin=inp,
+        if isinstance(inp, io.StringIO):
+            proc_inp = subprocess.PIPE
+            communicate_args = [inp.getvalue()]
+        else:
+            proc_inp = inp
+            communicate_args = []
+
+        proc = subprocess.Popen(" ".join([self._name, *args]),
+                                stdin=proc_inp,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
-                                encoding='utf8')
+                                encoding='utf8',
+                                shell=True)
 
-        s_out, s_err = proc.communicate()
+        s_out, s_err = proc.communicate(*communicate_args)
         out.write(s_out)
         err.write(s_err)
-
-
-# x = ExternalCommand()
-#
-# inp = io.StringIO("csdcscdcs")
-# x.run(['echo', '134'], inp, sys.stdout, sys.stderr, Environment())
-
-# print(xs.getvalue())
-
-from contextlib import redirect_stdout
-
+        return proc.poll()

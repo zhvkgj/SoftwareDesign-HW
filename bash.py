@@ -1,4 +1,4 @@
-from src.bash_runner.runner import bash
+from src.bash_runner.runner import Bash
 import sys
 
-exit(bash(sys.stdin, sys.stdout, sys.stderr))
+exit(Bash.run(sys.stdin, sys.stdout, sys.stderr))
