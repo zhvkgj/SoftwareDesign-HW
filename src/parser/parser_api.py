@@ -62,5 +62,5 @@ class IParser(ABC):
     """Интерфейс парсера"""
     @staticmethod
     @abstractmethod
-    def parse(s: List[Token]) -> PipeInfo:
+    def parse(s: List[Token]) -> PipeInfo[Token]:
         pass
