@@ -10,4 +10,5 @@ disable=
     R0903, # Too few public methods
     W0613, # unised parameters
     R0201, # method can be a function
+    W0221
 
