@@ -1,4 +1,7 @@
 from typing import IO
+
+from termcolor import colored
+
 from src.interpreter.bash import BashInterpreter
 from src.exceptions.exceptions import InterpreterException
 
@@ -13,7 +16,7 @@ class Bash:
                 try:
                     interpreter.execute_cmd_line(cmd_line)
                 except InterpreterException as e:
-                    print(f'Error: {e}', file=err)
+                    print(colored(f'Error: {e}', 'red'), file=err)
         except KeyboardInterrupt:
             print('Closing bash...', file=out)
             return 0

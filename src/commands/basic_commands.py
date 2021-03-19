@@ -10,6 +10,7 @@ from typing import Match, Optional
 from termcolor import colored
 
 from src.commands.command_api import IBasicCommand
+from src.exceptions.exceptions import InterpreterException
 
 
 class BasicCmdNames:
@@ -41,8 +42,11 @@ class CatCommand(IBasicCommand):
             print(s, file=out, end='')
         elif len(args) == 1:
             path = args[0]
-            with open(path, 'r') as f:
-                print(f.read(), file=out, end='')
+            try:
+                with open(path, 'r') as f:
+                    print(f.read(), file=out, end='')
+            except IOError as e:
+                raise InterpreterException(e) from e
         else:
             err.write(f'Cat command expected 0 or 1 arguments, '
                       f'but given {len(args)}.')
@@ -80,8 +84,11 @@ class WcCommand(IBasicCommand):
             self._count(inp, out)
         elif len(args) == 1:
             path = args[0]
-            with open(path, 'r') as f:
-                self._count(f, out)
+            try:
+                with open(path, 'r') as f:
+                    self._count(f, out)
+            except IOError as e:
+                raise InterpreterException(e) from e
         return 0
 
 
@@ -100,6 +107,7 @@ class GrepCommand(IBasicCommand):
         parser.add_argument('-w', required=False, action='store_true')
         parser.add_argument('-A', required=False, default=0, type=int)
         parser.add_argument('pattern')
+        parser.add_argument('path', nargs='?')
         return parser
 
     @staticmethod
@@ -123,16 +131,10 @@ class GrepCommand(IBasicCommand):
 
         return re.sub(pattern, replace, s, **params)
 
-    def run(self, args, inp, out, err, env) -> int:
-        parser = self._parser
-
-        namespace = parser.parse_args(args)
-
-        window = namespace.A
-
+    def _grep(self, inp, out, pattern, window, ignore_case, whole_word):
         last = -1
         for i, line in enumerate(inp):
-            s = GrepCommand._grep_line(line, namespace.pattern, namespace.i, namespace.w)
+            s = GrepCommand._grep_line(line, pattern, ignore_case, whole_word)
             if s:
                 if last != -1 and window > 0 and i > last:
                     print(colored('--', 'blue'), file=out)
@@ -142,3 +144,18 @@ class GrepCommand(IBasicCommand):
             if i <= last:
                 print(s, file=out, end='')
         return 0
+
+    def run(self, args, inp, out, err, env) -> int:
+        parser = self._parser
+
+        namespace = parser.parse_args(args)
+        if namespace.path:
+            try:
+                with open(namespace.path, 'r') as f:
+                    return self._grep(f, out, namespace.pattern,
+                                      namespace.A, namespace.i, namespace.w)
+            except IOError as e:
+                raise InterpreterException(e) from e
+        else:
+            return self._grep(inp, out, namespace.pattern,
+                              namespace.A, namespace.i, namespace.w)
