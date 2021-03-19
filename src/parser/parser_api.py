@@ -60,7 +60,6 @@ class PipeInfo(Generic[T]):
 
 class IParser(ABC):
     """Интерфейс парсера"""
-    @staticmethod
     @abstractmethod
-    def parse(s: List[Token]) -> PipeInfo[Token]:
+    def parse(self, s: List[Token]) -> PipeInfo[Token]:
         pass

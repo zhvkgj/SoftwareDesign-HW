@@ -1,10 +1,12 @@
-from src.lexer.lexer import Lexer
-from src.parser.simple_parser import *
+from src.lexer.lexer import SimpleLexer
+from src.lexer.rules import Token, TokenType
+from src.parser.parser_api import PipeInfo, CommandInfo
+from src.parser.simple_parser import SimpleParser
 
 
 def check(s: str, expected: PipeInfo):
-    tokens = Lexer.split(s)
-    pipe_info = SimpleParser.parse(tokens)
+    tokens = SimpleLexer().split(s)
+    pipe_info = SimpleParser().parse(tokens)
     assert str(pipe_info) == str(expected)
 
 

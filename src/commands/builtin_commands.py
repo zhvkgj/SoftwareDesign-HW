@@ -19,8 +19,7 @@ class BuiltInCmdNames:
 
 
 class SetVarCommand(IBasicCommand):
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BuiltInCmdNames.SetVar
 
     def run(self, args, inp, out, err, env) -> int:
@@ -30,8 +29,7 @@ class SetVarCommand(IBasicCommand):
 
 
 class ListVarsCommand(IBasicCommand):
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BuiltInCmdNames.ListVars
 
     def run(self, args, inp, out, err, env) -> int:
@@ -41,8 +39,7 @@ class ListVarsCommand(IBasicCommand):
 
 
 class ExitCommand(IBasicCommand):
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BuiltInCmdNames.Exit
 
     def run(self, args, inp, out, err, env) -> int:

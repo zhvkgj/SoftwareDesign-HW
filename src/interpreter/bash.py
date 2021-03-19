@@ -7,6 +7,8 @@ from typing import IO
 from src.commands.basic_commands import WcCommand, GrepCommand
 from src.commands.basic_commands import EchoCommand, CatCommand, PwdCommand
 from src.interpreter.base_interpreter import BaseInterpreter
+from src.lexer.lexer import SimpleLexer
+from src.parser.simple_parser import SimpleParser
 
 
 class BashInterpreter(BaseInterpreter):
@@ -24,7 +26,7 @@ class BashInterpreter(BaseInterpreter):
     ]
 
     def __init__(self, inp: IO, out: IO, err: IO):
-        super().__init__(inp, out, err)
+        super().__init__(inp, out, err, SimpleLexer(), SimpleParser())
 
         for cmd in BashInterpreter._registered_commands:
             self.register_cmd(cmd())

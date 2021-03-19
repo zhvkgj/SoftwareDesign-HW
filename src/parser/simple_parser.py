@@ -17,8 +17,7 @@ class SimpleParser(IParser):
     Класс, реализующий парсер.
     """
 
-    @staticmethod
-    def parse(tokens: List[Token]) -> PipeInfo[Token]:
+    def parse(self, tokens: List[Token]) -> PipeInfo[Token]:
         """
         Принимает список токенов, разобраный результат.
         Пока просто идёт разделение по пайпам, и то, что

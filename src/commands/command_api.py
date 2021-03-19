@@ -35,7 +35,6 @@ class IBasicCommand(ICommand):
     """
     Интерфейс для базовых утилит, у которых есть имя.
     """
-    @staticmethod
     @abstractmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         pass

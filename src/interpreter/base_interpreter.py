@@ -11,9 +11,8 @@ from src.commands.builtin_commands import PipeAggregationCommand
 from src.commands.command_api import ICommand, IBasicCommand
 from src.enviroment.enviroment import Environment
 from src.expander.expander import Expander
-from src.lexer.lexer import Lexer
-from src.parser.parser_api import CommandInfo
-from src.parser.simple_parser import SimpleParser
+from src.lexer.lexer import ILexer
+from src.parser.parser_api import CommandInfo, IParser
 
 
 class BaseInterpreter:
@@ -28,7 +27,7 @@ class BaseInterpreter:
         ExitCommand
     ]
 
-    def __init__(self, inp: IO, out: IO, err: IO):
+    def __init__(self, inp: IO, out: IO, err: IO, lexer: ILexer, parser: IParser):
         """
         Конструктор, который фиксирует потоки, с которыми
         будет работать интерпретатор (не обязательно sys.stdin/...)
@@ -40,9 +39,12 @@ class BaseInterpreter:
         self.out = out
         self.err = err
 
+        self.lexer = lexer
+        self.parser = parser
+
         self._cmds: Dict[str, IBasicCommand] = {
-            cmd.get_name(): cmd()
-            for cmd in BaseInterpreter._registered_cmds
+            cmd.get_name(): cmd
+            for cmd in [cmdType() for cmdType in BaseInterpreter._registered_cmds]
         }
         self._env = Environment()
 
@@ -71,8 +73,8 @@ class BaseInterpreter:
         :param cmd_line:
         :return:
         """
-        tokens = Lexer.split(cmd_line)
-        pipe_token_info = SimpleParser.parse(tokens)
+        tokens = self.lexer.split(cmd_line)
+        pipe_token_info = self.parser.parse(tokens)
         pipe_str_info = Expander.substitute_pipe(pipe_token_info, self._env.vars)
         cmd_infos = pipe_str_info.utils
 

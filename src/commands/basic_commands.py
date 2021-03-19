@@ -22,8 +22,7 @@ class BasicCmdNames:
 
 
 class EchoCommand(IBasicCommand):
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BasicCmdNames.Echo
 
     def run(self, args, inp, out, err, env) -> int:
@@ -32,8 +31,7 @@ class EchoCommand(IBasicCommand):
 
 
 class CatCommand(IBasicCommand):
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BasicCmdNames.Cat
 
     def run(self, args, inp, out, err, env) -> int:
@@ -54,8 +52,7 @@ class CatCommand(IBasicCommand):
 
 
 class PwdCommand(IBasicCommand):
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BasicCmdNames.Pwd
 
     def run(self, args, inp, out, err, env) -> int:
@@ -65,8 +62,7 @@ class PwdCommand(IBasicCommand):
 
 
 class WcCommand(IBasicCommand):
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BasicCmdNames.Wc
 
     @staticmethod
@@ -96,8 +92,7 @@ class GrepCommand(IBasicCommand):
     def __init__(self):
         self._parser = GrepCommand._get_args_parser()
 
-    @staticmethod
-    def get_name() -> str:
+    def get_name(self) -> str:
         return BasicCmdNames.Grep
 
     @staticmethod

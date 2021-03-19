@@ -1,4 +1,7 @@
-from src.bash_runner.runner import Bash
 import sys
 
-exit(Bash.run(sys.stdin, sys.stdout, sys.stderr))
+from src.bash_runner.runner import BashRunner
+from src.interpreter.bash import BashInterpreter
+
+interpreter = BashRunner(BashInterpreter(sys.stdin, sys.stdout, sys.stderr))
+sys.exit(interpreter.run())
