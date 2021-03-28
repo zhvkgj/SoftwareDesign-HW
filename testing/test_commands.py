@@ -91,9 +91,31 @@ def test_echo_pipe_ls():
     check(pipe, [], '', '\n'.join(dir_content) + '\n')
 
 
-def test_cd_and_pwd():
+def test_cd1():
+    cd = CdCommand()
+    pwd = PwdCommand()
+    exec_command(cd, ['src/commands'], '')
+    check(pwd, [], '', '/home/user/Desktop/SoftwareDesign-HW/src/commands\n')
+
+
+def test_cd2():
+    cd = CdCommand()
+    pwd = PwdCommand()
+    exec_command(cd, ['..'], '')
+    check(pwd, [], '', '/home/user/Desktop/SoftwareDesign-HW/src\n')
+
+
+def test_cd3():
+    cd = CdCommand()
+    try:
+        exec_command(cd, ['bash_runner_incorrect_directory'], '')
+        assert False
+    except InterpreterException:
+        assert True
+
+
+def test_cd4():
     cd = CdCommand()
     pwd = PwdCommand()
     exec_command(cd, [], '')
-
     check(pwd, [], '', f'{Path.home()}\n')
